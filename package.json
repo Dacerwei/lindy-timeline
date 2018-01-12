@@ -2,6 +2,7 @@
   "name": "lindy-timeline",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://dacerwei.github.io/lindy-timeline",
   "dependencies": {
     "lodash": "^4.17.4",
     "material-design-icons": "^3.0.1",
@@ -18,6 +19,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "gh-pages": "^1.1.0"
   }
 }
