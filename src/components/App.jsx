@@ -3,7 +3,20 @@ import { connect } from 'react-redux';
 import { addEvent, deleteEvent, clearEvents } from '../actions';
 import moment from 'moment';
 import _ from 'lodash';
+import DatePicker from 'material-ui/DatePicker';
+import Paper from 'material-ui/Paper';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import {List, ListItem} from 'material-ui/List';
+import IconButton from 'material-ui/IconButton';
 
+const paperStyle = {
+    height: 'auto',
+    width: '80%',
+    textAlign:'center',
+    margin: 'auto',
+    padding: '10px'
+};
 class App extends Component {
     constructor(props) {
         super(props);
@@ -24,70 +37,83 @@ class App extends Component {
     renderEvents() {
         const { events } = this.props;
         return (
-            <ul className= "list-group col-sm-4">
-                {
-                    _.map(events, event => {
-                        return (
-                            <li key={event.id} className="list-group-item">
-                                <div className="list-item">
-                                    <div>{event.title}</div>
-                                    <div>Start date: <em>{moment(new Date(event.startDate)).format('LL')}</em></div>
-                                    <div>end date: <em>{moment(new Date(event.endDate)).format('LL')}</em></div>
-                                </div>
-                                <div
-                                    className="list-item delete-button"
-                                    onClick={() => this.deleteEvent(event.id)}
-                                >
-                                    &#x2715;
-                                </div>
-                            </li>
-                        )
-                    })
-                }
-            </ul>
+            <Paper style={paperStyle} zDepth={1} >
+                <List>
+                    {
+                        _.map(events, event => {
+                            return (
+                                <ListItem
+                                    key={event.id}
+                                    primaryText={
+                                        <h2>{event.title}</h2>
+                                    }
+                                    secondaryText={
+                                        <div>
+                                            <div>Start date: <em>{moment(new Date(event.startDate)).format('LL')}</em></div>
+                                            <div>End date: <em>{moment(new Date(event.endDate)).format('LL')}</em></div>
+                                        </div>
+                                    }
+                                    secondaryTextLines={2}
+                                    rightIconButton={
+                                        <IconButton
+                                            onClick={() => this.deleteEvent(event.id)}
+                                        >
+                                            <i className="material-icons">delete</i>
+                                        </IconButton>
+                                    }
+                                />
+                            )
+                        })
+                    }
+                </List>
+            </Paper>
         );
     }
     render() {
         return(
             <div className="App">
                 <div className="title">
-                    Lindy Timeline
+                    <h1 style={{textAlign: 'center'}}>Lindy Timeline</h1>
                 </div>
-                <div className="form-inline reminder-form">
-                    <div className="form-group">
-                        <input
-                            className="form-control"
-                            placeholder="add a Swing Event"
-                            onChange={e => this.setState({title: e.target.value})}
-                        />
-                        <input
-                            className="form-control"
-                            type="datetime-local"
-                            onChange={e => this.setState({startDate: e.target.value})}
-                        />
-                        <input
-                            className="form-control"
-                            type="datetime-local"
-                            onChange={e => this.setState({endDate: e.target.value})}
+                <Paper style={paperStyle} zDepth={1} >
+                    <div className="form-inline">
+                        <div className="form-group">
+                            <TextField
+                                hintText="Event Title"
+                                onChange={e => this.setState({title: e.target.value})}
+                            />
+                            <br />
+                            <DatePicker
+                                hintText="Start Date" openToYearSelection={true}
+                                onChange={(date) => {this.setState({startDate: date})}}
+                            />
+                            <br />
+                            <DatePicker
+                                hintText="End Date"
+                                openToYearSelection={true}
+                                onChange={(date) => {this.setState({endDate: date})}}
+                            />
+                            <br />
+                        </div>
+                        <RaisedButton
+                            label="Add Event"
+                            primary={true}
+                            style={{margin: 12}}
+                            onClick={() => this.addEvent()}
                         />
                     </div>
-                    <button
-                        type="button"
-                        className="btn btn-success"
-                        onClick={() => this.addEvent()}
-                    >
-                    Add Event
-                    </button>
-                </div>
+                </Paper>
                 {
                     this.renderEvents()
                 }
-                <div
-                    className="btn btn-danger"
+                <Paper style={paperStyle} zDepth={1} >
+                <RaisedButton
+                    label="Clear Events"
+                    secondary={true}
+                    style={{margin: 12, textAlign: 'center'}}
                     onClick={() => this.props.clearEvents()}
-                >
-                    Clear Events
-                </div>
+                />
+                </Paper>
             </div>
         );
     }
